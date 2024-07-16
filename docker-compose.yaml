@@ -1,16 +1,14 @@
-
 services:
   angularapp:
     build:
-      context: .
+      context: ./angularapp
     environment:
       NODE_ENV: production
     ports:
       - 4200:4200
   aspnetapp:
     build:
-      context: .
-      target: final
+      context: ./aspnetapp
     ports:
       - 8080:8080
 
