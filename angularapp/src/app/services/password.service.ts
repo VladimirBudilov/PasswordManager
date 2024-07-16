@@ -14,7 +14,7 @@ export interface PasswordEntry {
   providedIn: 'root'
 })
 export class PasswordService {
-  private apiUrl = 'http://localhost:5000/api/passwords';  // URL для вашего API
+  private apiUrl = 'http://localhost:8080/api/passwords';
 
   constructor(private http: HttpClient) { }
 

@@ -2,7 +2,6 @@
 
 namespace PasswordManager.Services;
 
-// PasswordManagerService.cs
 public class PasswordManagerService(IPasswordEntryRepository repository)
 {
     public async Task<bool> TryAddPasswordEntryAsync(PasswordEntry entry)

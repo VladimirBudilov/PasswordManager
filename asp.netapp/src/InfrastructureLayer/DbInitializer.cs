@@ -1,7 +1,6 @@
 ﻿namespace Infrastructure_Layer;
 
 using DomainLayer;
-using Microsoft.EntityFrameworkCore;
 
 public static class DbInitializer
 {

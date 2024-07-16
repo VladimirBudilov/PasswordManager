@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure_Layer;
 
-// PasswordEntryRepository.cs
 public class PasswordEntryRepository(AppDbContext dbContext) : IPasswordEntryRepository
 {
     private readonly DbSet<PasswordEntry> _passwordEntries = dbContext.Set<PasswordEntry>();

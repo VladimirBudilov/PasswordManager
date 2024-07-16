@@ -1,14 +1,9 @@
-﻿using System.Linq.Expressions;
+﻿namespace DomainLayer;
 
-namespace DomainLayer;
-
-// IPasswordEntryRepository.cs
 public interface IPasswordEntryRepository
 {
     Task<List<PasswordEntry>> GetAllAsync();
     Task<List<PasswordEntry>> FilterAsync(string name);
     Task<PasswordEntry> GetByNameAsync(string name);
     Task AddAsync(PasswordEntry entry);
-    
-    
 }

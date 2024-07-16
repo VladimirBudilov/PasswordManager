@@ -14,21 +14,16 @@ builder.Services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyCont
 builder.Services.AddInfrastructure();
 builder.Services.AddScoped<PasswordManagerService>();
 builder.Services.AddAutoMapper(typeof(PasswordEntryProfile));
+//swagger
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Password API", Version = "v1" });
 });
+//corse
 builder.Services.AddCors(options =>
-    {
-    options.AddDefaultPolicy(policy =>
-    {
-        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-    });
+{
+    options.AddDefaultPolicy(policy => { policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
 });
-
-// Add AWS Lambda support. When application is run in Lambda Kestrel is swapped out as the web server with Amazon.Lambda.AspNetCoreServer. This
-// package will act as the webserver translating request and responses between the Lambda event source and ASP.NET Core.
-builder.Services.AddAWSLambdaHosting(LambdaEventSource.RestApi);
 
 var app = builder.Build();
 app.UseExceptionHandler();
@@ -42,7 +37,12 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = string.Empty;
 });
 
-var dbContext = app.Services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>();
-DbInitializer.SeedDatabase(dbContext);
+//seed database
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<AppDbContext>();
+    DbInitializer.SeedDatabase(context);
+}
 
 app.Run();

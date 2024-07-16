@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure_Layer;
 
-// AppDbContext.cs
 public class AppDbContext : DbContext
 {
     public DbSet<PasswordEntry> PasswordEntries { get; set; }
