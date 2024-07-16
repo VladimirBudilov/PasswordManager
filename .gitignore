@@ -20,7 +20,6 @@
 
 # Angular cache files
 **/.angular/cache
-**/angular.json
 
 # Angular CLI config
 **/.angular-cli.json
