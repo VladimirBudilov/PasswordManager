@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {map, Observable} from 'rxjs';
 
 export interface PasswordEntry {
   isVisible : boolean;
-  id: number;
   name: string;
   password: string;
   type: 'site' | 'email';
-  date: Date;
+  createdAt: Date;
 }
 
 @Injectable({
@@ -19,8 +18,15 @@ export class PasswordService {
 
   constructor(private http: HttpClient) { }
 
-  getPasswords(): Observable<PasswordEntry[]> {
-    return this.http.get<PasswordEntry[]>(this.apiUrl);
+  getPasswords(occurrenceInEmail?: string): Observable<PasswordEntry[]> {
+    let params = new HttpParams();
+    if (occurrenceInEmail) {
+      params = params.append('occurrenceInEmail', occurrenceInEmail);
+    }
+
+    return this.http.get<{ passwords: PasswordEntry[] }>(this.apiUrl, { params }).pipe(
+      map(response => response.passwords)
+    );
   }
 
   addPassword(entry: PasswordEntry): Observable<PasswordEntry> {

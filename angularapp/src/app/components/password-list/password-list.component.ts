@@ -1,26 +1,35 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { PasswordService, PasswordEntry } from '../../services/password.service';
-import { PasswordModalComponent} from "../password-modal/password-modal.component";
+import { PasswordModalComponent } from "../password-modal/password-modal.component";
 
 @Component({
   selector: 'app-root',
   templateUrl: './password-list.component.html',
   styleUrls: ['./password-list.component.css']
-
 })
 export class PasswordListComponent implements OnInit {
+  @ViewChild(PasswordModalComponent) passwordModal!: PasswordModalComponent;
   passwords: PasswordEntry[] = [];
-  searchTerm: string = '';
+  isModalOpen = false;
+  displayedColumns: string[] = ['name', 'password', 'date'];
 
-  constructor(private passwordService: PasswordService) { }
+  constructor(
+    private passwordService: PasswordService
+    ) { }
 
   ngOnInit(): void {
     this.loadPasswords();
   }
 
   loadPasswords(): void {
-    this.passwordService.getPasswords().subscribe(passwords => {
-      this.passwords = passwords.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    this.passwordService.getPasswords().subscribe(response => {
+      this.passwords = response.map(entry => ({ ...entry, isVisible: false }));
+    });
+  }
+
+  onSearchTermChange(searchTerm: string): void {
+    this.passwordService.getPasswords(searchTerm).subscribe(response => {
+      this.passwords = response.map(entry => ({ ...entry, isVisible: false }));
     });
   }
 
@@ -28,12 +37,12 @@ export class PasswordListComponent implements OnInit {
     entry.isVisible = !entry.isVisible;
   }
 
-  get filteredPasswords(): PasswordEntry[] {
-    return this.passwords.filter(entry =>
-      entry.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
+  get GetPasswords(): PasswordEntry[] {
+    return this.passwords;
   }
 
-  openModal() {
+  openModal(): void {
+    this.passwordModal.openModal();
   }
 }
+

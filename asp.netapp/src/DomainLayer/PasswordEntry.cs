@@ -1,30 +1,20 @@
-﻿namespace DomainLayer;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+
+namespace DomainLayer;
 
 // PasswordEntry.cs (Entity)
-public class PasswordEntry
+public class PasswordEntry(string name, string password, EntryType type)
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public string Password { get; set; }
-    public EntryType Type { get; set; } 
-    public DateTime CreatedAt { get; set; }
-    
-    public PasswordEntry(string name, string password, EntryType type)
-    {
-        Name = name;
-        Password = password;
-        Type = type;
-        CreatedAt = DateTime.UtcNow;
-    }
-    
-    public string RevealPassword()
-    {
-        return Password;
-    }
+    public Guid Id { get; set; }
+    public string Name { get; set; } = name;
+    public string Password { get; set; } = password;
+    public EntryType Type { get; set; } = type;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
 
 public enum EntryType
 {
-    Website,
-    Email
+    [Display(Name = "Website")] Website,
+    [Display(Name = "Email")] Email
 }

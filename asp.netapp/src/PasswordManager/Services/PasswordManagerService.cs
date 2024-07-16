@@ -5,17 +5,15 @@ namespace PasswordManager.Services;
 // PasswordManagerService.cs
 public class PasswordManagerService(IPasswordEntryRepository repository)
 {
-    public async Task<bool> TryAddPasswordEntryAsync(string name, string password, EntryType type)
+    public async Task<bool> TryAddPasswordEntryAsync(PasswordEntry entry)
     {
         var existingEntry = await repository.GetAllAsync();
-        if (existingEntry.Any(e => e.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
+        if (existingEntry.Any(e => e.Name.Equals(entry.Name, StringComparison.OrdinalIgnoreCase)))
         {
             return false;
         }
-
-        var newEntry = new PasswordEntry(name, password, type);
-
-        await repository.AddAsync(newEntry);
+        
+        await repository.AddAsync(entry);
         return true;
     }
 

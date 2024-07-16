@@ -3,4 +3,4 @@ using DomainLayer;
 
 namespace PasswordManager.DTOs;
 
-public record PasswordEntryDto([Required]string Name, [Required]string Password, string Type);
+public record PasswordEntryDto([Required]string Name, [Required]string Password, [Required]string Type,[Required] string CreatedAt);

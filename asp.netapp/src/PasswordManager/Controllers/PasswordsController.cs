@@ -1,4 +1,5 @@
-﻿using DomainLayer;
+﻿using AutoMapper;
+using DomainLayer;
 using Microsoft.AspNetCore.Mvc;
 using PasswordManager.DTOs;
 using PasswordManager.Services;
@@ -7,23 +8,24 @@ namespace PasswordManager.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class PasswordsController(PasswordManagerService passwordManagerService) : ControllerBase
+public class PasswordsController(PasswordManagerService passwordManagerService, IMapper mapper) : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<List<PasswordEntry>>> GetPasswords(string occurrenceInEmail = null)
     {
-        var passwords = await passwordManagerService.GetPasswordEntriesAsync(occurrenceInEmail);
-        return Ok(passwords);
+        var passwordEntries = await passwordManagerService.GetPasswordEntriesAsync(occurrenceInEmail);
+        var output = mapper.Map<List<PasswordEntryDto>>(passwordEntries);
+        return Ok(new { passwords = output});
     }
 
     [HttpPost]
-    public async Task<ActionResult> AddPassword(PasswordEntryDto passwordDto)
+    public async Task<ActionResult> AddPassword(CreatePasswordEntryDto passwordDto)
     {
-        
-        //convert dto to domain object
-        var entryType = Enum.Parse<EntryType>(passwordDto.Type, true);
-        await passwordManagerService.TryAddPasswordEntryAsync(passwordDto.Name, passwordDto.Password, entryType);
-        return Ok();
+        var passwordEntity = mapper.Map<PasswordEntry>(passwordDto);
+        var passwordAdded = await passwordManagerService.TryAddPasswordEntryAsync(passwordEntity);
+        if (!passwordAdded)
+            return Conflict();
+        var output = mapper.Map<PasswordEntryDto>(passwordEntity);
+        return CreatedAtAction(nameof(AddPassword), new { id = passwordEntity.Id }, output);
     }
-
 }
