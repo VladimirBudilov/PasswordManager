@@ -8,7 +8,7 @@ public class PasswordEntryRepository(AppDbContext dbContext) : IPasswordEntryRep
     private readonly DbSet<PasswordEntry> _passwordEntries = dbContext.Set<PasswordEntry>();
     public async Task<List<PasswordEntry>> GetAllAsync()
     {
-        return await _passwordEntries.OrderBy(PasswordEntrySpecifications.OrderByData()).ToListAsync();
+        return await _passwordEntries.OrderByDescending(PasswordEntrySpecifications.OrderByData()).ToListAsync();
     }
 
     public async Task<List<PasswordEntry>> FilterAsync(string name)
