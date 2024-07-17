@@ -11,7 +11,7 @@ namespace PasswordManager.Controllers;
 public class PasswordsController(PasswordManagerService passwordManagerService, IMapper mapper) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<List<PasswordEntry>>> GetPasswords(string occurrenceInEmail = null)
+    public async Task<ActionResult<List<PasswordEntryDto>>> GetPasswords(string occurrenceInEmail = null)
     {
         var passwordEntries = await passwordManagerService.GetPasswordEntriesAsync(occurrenceInEmail);
         var output = mapper.Map<List<PasswordEntryDto>>(passwordEntries);
